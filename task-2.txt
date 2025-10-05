@@ -1,4 +1,85 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541064
+AD-SOYAD: Muhammet Eren Alptekin
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+OYUN_STRATEJISI_ALGORITMASI
+
+   MONOPOLY_EN_IYI_HAMLE_ALGORITMASI
+
+BAŞLA
+
+    TANIMLA OyuncuDurumu
+        - Nakit
+        - MülkListesi
+        - Borç
+        - HapisDurumu
+        - Konum
+
+    TANIMLA OyunTahtası
+        - Kareler (Mülkler, Şans, Kamu Fonu, Vergi, Hapis, vb.)
+        - MülkBilgileri (Fiyat, Renk, Kira, Ev/Otel maliyeti)
+
+    FONKSİYON HamleDegerlendir(oyuncu, oyunTahtası):
+        SEÇENEKLER = []
+
+        // 1. Hapis kontrolü
+        IF oyuncu.HapisDurumu == TRUE ise
+            EĞER "Çıkış kartı" varsa SEÇENEKLER’E ekle("Kart ile çık")
+            EĞER oyuncu.Nakit >= 50 ise SEÇENEKLER’E ekle("50$ öde çık")
+            SEÇENEKLER’E ekle("Zar at, çıkmayı dene")
+
+        // 2. Zar at ve yeni konumu hesapla
+        ZAR = RastgeleZarAt()
+        yeniKonum = (oyuncu.Konum + ZAR) mod TahtaUzunluğu
+
+        // 3. Yeni karede durum kontrolü
+        kare = oyunTahtası[yeniKonum]
+
+        EĞER kare tip == "Mülk" ise
+            EĞER kare.boşSA
+                EĞER oyuncu.Nakit >= kare.Fiyat
+                    SEÇENEKLER’E ekle("Mülk satın al")
+                AKSİ HALDE
+                    SEÇENEKLER’E ekle("Satın alma - açık artırma riski")
+            DEĞİLSE
+                EĞER kare.sahip == oyuncu değil
+                    SEÇENEKLER’E ekle("Kira öde")
+                DEĞİLSE
+                    SEÇENEKLER’E ekle("Hiçbir şey yapma")
+
+        EĞER kare tip == "Şans" veya "Kamu Fonu" ise
+            kart = KartÇek()
+            SEÇENEKLER’E ekle("Kart sonucu uygula: " + kart)
+
+        EĞER kare tip == "Vergi" ise
+            SEÇENEKLER’E ekle("Vergi öde")
+
+        // 4. İnşaat seçeneği kontrolü
+        RENK_GRUPLARI = TamamlananRenkGrupları(oyuncu.Mülk_Listesi)
+        HER renkGrubu içinde
+            EĞER oyuncu.Nakit >= EvMaliyeti
+                SEÇENEKLER’E ekle("Ev inşa et: " + renkGrubu)
+
+        // 5. Mülk ipotek seçeneği (nakit ihtiyacı için)
+        EĞER oyuncu.Nakit < MinimumKasaBariyeri
+            EN_DEĞERLİ_MÜLK = SecilebilirIpotek(oyuncu.MülkListesi)
+            SEÇENEKLER’E ekle("İpotek: " + EN_DEĞERLİ_MÜLK)
+
+        // 6. Rakiplerle takas seçeneği
+        HER rakip içinde
+            EĞER StratejikTakasMantıklı(oyuncu, rakip) == TRUE
+                SEÇENEKLER’E ekle("Takas öner: " + rakip)
+
+        GERİ_DÖN SEÇENEKLER
+
+    // ANA DÖNGÜ
+    OYUN_BİTMEDİĞİ_SÜRECE
+        HER oyuncu için
+            seçenekler = HamleDegerlendir(oyuncu, oyunTahtası)
+            EN_IYI = SkorlaVeSec(seçenekler, oyuncu, oyunTahtası)
+            Uygula(EN_IYI)
+
+        SONRAKİ tura geç
+
+BİTİR
