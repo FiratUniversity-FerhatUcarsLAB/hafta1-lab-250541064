@@ -1,4 +1,82 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541064
+AD-SOYAD: Muhammet Eren Alptekin
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+GUNLUK_HAYAT_ALGORİTMASI
+
+  YUKSEK_SKOR_ALGORITMASI
+    // Yerel değişkenler (girdi değil): ilerleyişi takip eden sayılar / geçici hesaplar
+    tur ← 0
+    en_yuksek_skor_tur ← 0        // sadece analiz için, girdi değil
+    baslangic_skor ← skor        // başlangıç noktasını sakla (girdi)
+    
+    // Ana döngü: can > 0 olduğu sürece oyun devam eder
+    WHILE can > 0 DO
+        tur ← tur + 1
+
+        // 1) OYNAMA STİLİ BELİRLEME (SADECE skor, can, seviye kullanılarak)
+        //   - can/seviye oranına göre agresiflik belirlenir.
+        oran ← can / seviye
+        IF oran >= 2 THEN
+            stil ← "AGGRESSIVE"
+        ELSE IF oran >= 1 THEN
+            stil ← "BALANCED"
+        ELSE
+            stil ← "CONSERVATIVE"
+        ENDIF
+
+        // 2) BAŞARI KRİTERİ HESAPLAMA (sadece girdiler + yerel hesaplama)
+        //    - can ve skor'dan türetilmiş bir 'başarı puanı' hesapla.
+        //    - bu, çevresel veri olmadan karar vermeyi sağlar.
+        basari_puani ← (can * 5) + (skor DIV 100)
+
+        // 3) STILE GÖRE BAŞARI EŞİĞİ VE ÖDÜL TANIMI
+        IF stil = "AGGRESSIVE" THEN
+            basari_esigi ← seviye * 10
+            odul ← 50 * seviye
+            basarısız_can_kaybi ← 1
+        ELSE IF stil = "BALANCED" THEN
+            basari_esigi ← seviye * 7
+            odul ← 25 * seviye
+            basarısız_can_kaybi ← 1
+        ELSE // CONSERVATIVE
+            basari_esigi ← seviye * 4
+            odul ← 10 * seviye
+            basarısız_can_kaybi ← 1
+        ENDIF
+
+        // 4) HAMLENİN SONUCUNU BELİRLE (deterministik kural: rastgelelik yok)
+        IF basari_puani >= basari_esigi THEN
+            // Başarılı hamle: puan kazan
+            skor ← skor + 50 coin
+            SONUC ← "BASARILI"
+        ELSE
+            // Başarısız hamle: can azalır
+            can ← can - 10
+            SONUC ← "BASARISIZ"
+        ENDIF
+
+        // 5) SEVİYE ATLAMA KONTROLÜ (girdiler korunuyor, seviye güncellenebilir)
+        //    - Seviye atlama eşiği: 100 * mevcut seviye (iç kural, girdi değil)
+        IF skor >= (100 * seviye) THEN
+            seviye ← seviye + 1
+            // seviye atlanınca küçük bir bonus (skoru tamamiyle girdi sayma;
+            // burada skor güncelleniyor — çıktı değişmez, sadece hesap)
+            skor ← skor + (10 * seviye)
+        ENDIF
+
+        // 6) ARA ANALİZ: tur içinde en yüksek skoru kaydet (isteğe bağlı görünüm)
+        IF skor > baslangic_skor AND skor > skor THEN
+            en_yuksek_skor_tur ← tur
+        ENDIF
+
+        // 7) Döngü içi durum göster (sadece mantık, çıktı olarak finalde yazdırılacak)
+        // DURUM_GOSTER(tur, skor, can, seviye)  -- (girdi/çıktı kısıtlaması nedeniyle opsiyonel)
+
+    ENDWHILE
+
+    // OYUN BİTİŞİ: güncellenmiş skor, can, seviye çıktıları
+    EKRANA_YAZ("Oyun Bitti! Toplam Skor: " + skor + " | Kalan Can: " + can + " | Seviye: " + seviye)
+
+
