@@ -1,4 +1,39 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:250541064
+AD-SOYAD:Muhammet Eren Alptekin
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ Problem Cozme Algoritması
+// 1. Başla
+BEGIN
+
+    // 2. Girdi al: toplam pasta miktarı (örneğin gram cinsinden) ve kişi sayısı
+    INPUT toplam_pasta_miktari
+    INPUT kisi_sayisi
+
+    // 3. Her kişiye düşen pasta miktarını hesapla
+    IF kisi_sayisi > 0 THEN
+        pay_miktari ← toplam_pasta_miktari / kisi_sayisi
+    ELSE
+        PRINT "Kişi sayısı sıfır olamaz!"
+        EXIT
+    END IF
+
+    // 4. Her kişi için pasta payını oluştur
+    FOR i FROM 1 TO kisi_sayisi DO
+
+        // 5. Kişiye pasta ver
+        PRINT "Kişi " + i + " → " + pay_miktari + " gram pasta verildi."
+
+    END FOR
+
+    // 6. Kalan pasta miktarını kontrol et (bölme işlemi küsuratlıysa)
+    kalan ← toplam_pasta_miktari MOD kisi_sayisi
+
+    IF kalan > 0 THEN
+        PRINT "Kalan pasta miktarı: " + kalan + " gram. İsteğe göre değerlendirilebilir."
+    ELSE
+        PRINT "Pasta tamamen paylaştırıldı."
+    END IF
+
+// 7. Bitir
+END
