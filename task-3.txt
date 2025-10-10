@@ -1,4 +1,46 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No:2505451064
+AD-SOYAD: Muhammet Eren Alptekin
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+Veri Organizasyonu Algoritması
+
+// Telefon rehberi bir liste şeklinde tanımlanır
+// Her kişi bir nesne veya kayıt olarak düşünülür: {isim, telefon}
+
+// 1. Başla
+BEGIN
+
+    // 2. Telefon rehberini tanımla
+    rehber ← [
+        {"isim": "Zeynep", "telefon": "0532..."},
+        {"isim": "Ahmet", "telefon": "0505..."},
+        {"isim": "Mehmet", "telefon": "0543..."},
+        {"isim": "Ayşe", "telefon": "0551..."}
+    ]
+
+    // 3. Rehberin uzunluğunu al
+    n ← LENGTH(rehber)
+
+    // 4. Bubble Sort algoritması ile alfabetik sırala
+    FOR i FROM 0 TO n - 1 DO
+        FOR j FROM 0 TO n - i - 2 DO
+
+            // 5. İki ismi karşılaştır
+            IF rehber[j].isim > rehber[j + 1].isim THEN
+
+                // 6. Yer değiştir (swap)
+                temp ← rehber[j]
+                rehber[j] ← rehber[j + 1]
+                rehber[j + 1] ← temp
+
+            END IF
+
+        END FOR
+    END FOR
+
+    // 7. Sıralanmış rehberi yazdır
+    FOR EACH kisi IN rehber DO
+        PRINT kisi.isim + " - " + kisi.telefon
+    END FOR
+
+END
