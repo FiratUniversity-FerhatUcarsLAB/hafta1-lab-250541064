@@ -1,4 +1,101 @@
-Öğrenci No:
-AD-SOYAD:
+Öğrenci No: 250541064
+AD-SOYAD: Muhammet Eren Alptekin
 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+araba sürme algoritması 
+ALGORITHM ArabaSurme
+
+    // 1. Başlangıç kontrolleri
+    INPUT anahtar_var_mi
+    INPUT yakit_durumu
+    INPUT sürücü_emniyet_kemer_takili_mi
+
+    IF anahtar_var == FALSE
+        PRINT "Anahtar yok, aracı çalıştıramazsınız."
+        EXIT
+    END IF
+
+    IF yakit_durumu <= 0
+        PRINT "Yeterli yakıt yok, lütfen yakıt alın."
+        EXIT
+    END IF
+
+    IF sürücü_emniyet_kemer_takili_mi == FALSE
+        PRINT "Lütfen emniyet kemerinizi takınız."
+        WAIT UNTIL sürücü_emniyet_kemer_takili == TRUE
+    END IF
+
+    // 2. Aracı çalıştır
+    PRINT "Araba çalıştırılıyor..."
+    MOTORU_CALISTIR()
+
+    // 3. Vites kontrolü
+    INPUT vites_tipi // "manuel" veya "otomatik"
+
+    IF vites_tipi == "manuel" THEN
+        BAS debriyaj
+        AYARLA vites TO 1
+        KALDIR el_freni
+    ELSE
+        AYARLA vites TO "D"
+        KALDIR el_freni
+    END IF
+
+    // 4. Hareket et
+    PRINT "Araba hareket ediyor..."
+    BAS gaz_pedali YAVAŞÇA
+
+    // 5. Sürüş döngüsü
+    WHILE varis_noktasina_ulasilmadi DO
+
+        // 5.1 Trafik ve yol kontrolü
+        IF trafik_isigi == "kırmızı"
+            BAS fren
+            WAIT UNTIL trafik_isigi == "yeşil"
+        END IF
+
+        IF önünde_engel_var THEN
+            BAS fren
+            DÜMENİ_SAĞA_YA_DA_SOLA_ÇEVİR()
+        END IF
+
+        // 5.2 Hız kontrolü
+        IF hız > hız_limiti THEN
+            BAS fren HAFİFÇE
+        ELSE IF hız < minimum_güvenli_hız THEN
+            BAS gaz_pedali BİRAZ_DAHA
+        END IF
+
+        // 5.3 Vites geçişleri (manuel için)
+        IF vites_tipi == "manuel" THEN
+            IF motor_devir > devir_sınırı THEN
+                BAS debriyaj
+                ARTIR vites
+                BIRAK debriyaj
+            END IF
+        END IF
+
+        // 5.4 Dönüşler
+        IF yaklaşan_dönüş_var THEN
+            SİNYAL_VER(yön)
+            YAVAŞLA
+            DÖN(yön)
+        END IF
+
+        // 5.5 Duraklama noktaları
+        IF duraklama_gerekiyor THEN
+            BAS fren
+            DUR
+            WAIT UNTIL devam_etme_izni == TRUE
+        END IF
+
+    END WHILE
+
+    // 6. Varış noktasına ulaşınca
+    BAS fren
+    DUR
+    AYARLA vites TO "P" veya "boş"
+    MOTORU_DURDUR()
+    PRINT "Varış noktasına ulaşıldı."
+
+END ALGORITHM
